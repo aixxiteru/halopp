@@ -97,8 +97,8 @@ const App: React.FC = () => {
           return;
         }
 
-        // 3. Tentukan nama section - Fallback ke 'Sebelum 2026' sesuai permintaan user
-        const sectionName = colA || 'Sebelum 2026';
+        // 3. Tentukan nama section - Fallback ke 'Lainnya' sesuai permintaan user
+        const sectionName = colA || 'Lainnya';
 
         // 4. Masukkan ke grouping
         if (!sectionMap.has(sectionName)) {
@@ -195,26 +195,43 @@ const App: React.FC = () => {
               </div>
 
               <div className="grid gap-3.5">
-                {section.links.map((link, lIdx) => (
-                  <a
-                    key={lIdx}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group relative flex items-center justify-between bg-white hover:bg-pink-50/50 p-6 rounded-[1.5rem] border border-white hover:border-pink-200 shadow-sm hover:shadow-xl hover:shadow-pink-200/30 transition-all duration-300 active:scale-[0.98]"
-                  >
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-base font-bold text-[#7c2d12] group-hover:text-pink-600 transition-colors">
-                        {link.title}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
-                      <span className="text-[10px] font-black text-pink-500 uppercase tracking-tighter">Buka</span>
-                      <ChevronRight size={18} className="text-pink-400" />
-                    </div>
-                    <ExternalLink size={14} className="absolute right-4 bottom-4 opacity-5 group-hover:opacity-10" />
-                  </a>
-                ))}
+                {section.links.map((link, lIdx) => {
+                  // Tentukan style kontras untuk section '2026' dan 'Lainnya'
+                  let buttonBg = "bg-white hover:bg-pink-50/50 border-white hover:border-pink-200";
+                  // Gunakan lebar konsisten untuk 2026 dan LAINNYA
+                  let buttonWidth = "";
+                  let buttonCenter = "";
+                  const isSpecialSection = section.name === "2026" || section.name.toLowerCase() === "lainnya";
+                  if (section.name === "2026") {
+                    buttonBg = "bg-pink-200/80 hover:bg-pink-400/90 border-pink-300 hover:border-pink-500";
+                  } else if (section.name.toLowerCase() === "lainnya") {
+                    buttonBg = "bg-yellow-200/80 hover:bg-yellow-400/90 border-yellow-300 hover:border-yellow-500";
+                  }
+                  if (isSpecialSection) {
+                    buttonWidth = "w-full max-w-md px-6 py-4";
+                    buttonCenter = "mx-auto";
+                  }
+                  return (
+                    <a
+                      key={lIdx}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`group relative flex items-center justify-between rounded-[1.5rem] shadow-sm hover:shadow-xl hover:shadow-pink-200/30 transition-all duration-300 active:scale-[0.98] ${buttonBg} ${buttonWidth} ${buttonCenter} ${buttonWidth ? '' : 'p-6'}`}
+                    >
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-base font-bold text-[#7c2d12] group-hover:text-pink-600 transition-colors">
+                          {link.title}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0">
+                        <span className="text-[10px] font-black text-pink-500 uppercase tracking-tighter">Buka</span>
+                        <ChevronRight size={18} className="text-pink-400" />
+                      </div>
+                      <ExternalLink size={14} className="absolute right-4 bottom-4 opacity-5 group-hover:opacity-10" />
+                    </a>
+                  );
+                })}
               </div>
             </section>
           ))
@@ -235,14 +252,14 @@ const App: React.FC = () => {
         <button 
           onClick={fetchData}
           disabled={isLoading}
-          className="flex items-center gap-2 px-8 py-3.5 bg-white rounded-full border border-pink-100 shadow-md hover:shadow-lg active:scale-95 transition-all disabled:opacity-50 group"
+          className="flex items-center gap-1.5 px-4 py-2 bg-white rounded-full border border-pink-100 shadow-md hover:shadow-lg active:scale-95 transition-all disabled:opacity-50 group min-h-0 min-w-0"
         >
           {isLoading ? (
-            <Loader2 size={16} className="animate-spin text-pink-500" />
+            <Loader2 size={12} className="animate-spin text-pink-500" />
           ) : (
-            <RefreshCw size={16} className="text-pink-500 group-hover:rotate-180 transition-transform duration-700" />
+            <RefreshCw size={12} className="text-pink-500 group-hover:rotate-180 transition-transform duration-700" />
           )}
-          <span className="text-[10px] font-extrabold uppercase tracking-[0.2em] text-[#7c2d12]">
+          <span className="text-[8px] font-extrabold uppercase tracking-[0.15em] text-[#7c2d12]">
             {isLoading ? 'Memuat Data...' : 'Sinkronkan Sekarang'}
           </span>
         </button>
@@ -252,7 +269,7 @@ const App: React.FC = () => {
         <div className="fixed bottom-8 px-4 w-full max-w-sm z-50">
           <div className="bg-red-600 text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center justify-between gap-4 border-2 border-white/20">
             <span className="text-xs font-bold">{error}</span>
-            <button onClick={() => setError(null)} className="text-[10px] font-black uppercase bg-white/20 px-3 py-1.5 rounded-lg">OK</button>
+            <button onClick={() => setError(null)} className="text-[8px] font-black uppercase bg-white/20 px-2 py-1 rounded-lg">OK</button>
           </div>
         </div>
       )}
