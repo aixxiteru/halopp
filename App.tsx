@@ -60,7 +60,7 @@ const App: React.FC = () => {
 
   // Theme Config
   const [siteTitle] = useState(() => 'Halo, PP.');
-  const [siteSubtitle] = useState(() => 'Berikut Kumpulan Link OSDM BSKJI');
+  const [siteSubtitle] = useState(() => 'Berikut Kumpulan Link Tim Kerja OSDM');
 
   const fetchData = useCallback(async () => {
     try {
@@ -144,11 +144,23 @@ const App: React.FC = () => {
     }
   }, [fetchData, sections.length]);
 
-  const dailyQuote = useMemo(() => {
+  // State untuk index quote yang sedang tampil
+  const [quoteIndex, setQuoteIndex] = useState(() => {
     const today = new Date();
     const dateHash = today.getFullYear() * 1000 + today.getMonth() * 100 + today.getDate();
-    return DAILY_QUOTES[dateHash % DAILY_QUOTES.length];
-  }, []);
+    return dateHash % DAILY_QUOTES.length;
+  });
+
+  const dailyQuote = DAILY_QUOTES[quoteIndex];
+
+  // Fungsi untuk mengganti quote secara acak
+  const handleNextQuote = () => {
+    let nextIndex;
+    do {
+      nextIndex = Math.floor(Math.random() * DAILY_QUOTES.length);
+    } while (nextIndex === quoteIndex && DAILY_QUOTES.length > 1);
+    setQuoteIndex(nextIndex);
+  };
 
   return (
     <div className="min-h-screen bg-[#fff5f5] flex flex-col items-center px-4 py-10 pb-20 relative overflow-x-hidden">
@@ -174,6 +186,13 @@ const App: React.FC = () => {
         <p className="text-center italic text-sm font-semibold leading-relaxed text-[#7c2d12]/80">
           "{dailyQuote}"
         </p>
+        <button
+          onClick={handleNextQuote}
+          className="mt-4 p-2 rounded-lg bg-pink-100 text-[#7c2d12] shadow hover:bg-pink-200 transition"
+          aria-label="Ganti inspirasi harian"
+        >
+          <RefreshCw size={16} className="inline align-text-bottom" />
+        </button>
       </div>
 
       <main className="w-full max-w-lg space-y-12 mb-12">
