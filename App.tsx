@@ -157,9 +157,9 @@ const App: React.FC = () => {
       <header className="text-center mb-10 space-y-3 animate-in fade-in slide-in-from-top duration-700 mt-6">
         <div className="mb-6 mx-auto w-fit">
           <img 
-            src={KEMENPERIN_LOGO} 
+            src="/logo_kemenperin.png"
             alt="Logo Kemenperin" 
-            className="h-20 md:h-24 w-auto object-contain drop-shadow-md rounded-xl"
+            className="h-12 md:h-16 w-auto object-contain drop-shadow-md rounded-xl"
           />
         </div>
         <h1 className="text-4xl font-extrabold tracking-tight uppercase text-[#7c2d12]">{siteTitle}</h1>
